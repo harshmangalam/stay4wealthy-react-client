@@ -59,7 +59,7 @@ function Login() {
     <Box maxW="md" mx="auto">
       <Box px="10" py="4" borderWidth="1px">
         <Text fontSize="xx-large" textAlign="center">
-          Stay4Wealthy
+          Login Account
         </Text>
 
         <Box my="8">

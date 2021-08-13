@@ -20,6 +20,7 @@ const Services = lazy(() => import("./pages/Services"));
 const Login = lazy(() => import("./pages/Login"));
 const Signup = lazy(() => import("./pages/Signup"));
 const Profile = lazy(() => import("./pages/Profile"));
+const Enquiry = lazy(() => import("./pages/Enquiry"));
 
 function App() {
   const isAuthenticated = useAuth((state) => state.isAuthenticated);
@@ -71,6 +72,7 @@ function App() {
                 <Route exact path="/" component={Home} />
                 <Route exact path="/about" component={About} />
                 <Route exact path="/services" component={Services} />
+                <Route exact path="/enquiry" component={Enquiry} />
                 <Route
                   exact
                   path="/profile"

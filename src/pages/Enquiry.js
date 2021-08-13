@@ -9,9 +9,8 @@ import {
   Text,
   VStack,
   useToast,
+  Textarea,
 } from "@chakra-ui/react";
-
-import { Link } from "react-router-dom";
 
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -21,17 +20,17 @@ import axios from "axios";
 const schema = yup.object().shape({
   name: yup.string().required(),
   phone: yup.string().required(),
-  password: yup.string().required(),
+  question: yup.string().required(),
   address: yup.string().required(),
-  pincode: yup.string().required(),
 });
 
-function Signup({ history }) {
+function Enquiry() {
   const toast = useToast();
 
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors, isSubmitting },
   } = useForm({
     resolver: yupResolver(schema),
@@ -40,23 +39,22 @@ function Signup({ history }) {
   const onSubmit = async (data) => {
     try {
       const res = await axios.post(
-        `${process.env.REACT_APP_BASEURL}/auth/signup`,
+        `${process.env.REACT_APP_BASEURL}/enquiry`,
         data
       );
+      reset({ name: "", phone: "", question: "", address: "" });
 
       toast({
-        title: "Signup Message",
+        title: "Enquiry Message",
         description: res.data.message,
-        status: "success",
+        status: res.data.status,
         duration: 4000,
         isClosable: true,
       });
-
-      history.push("/login");
     } catch (error) {
       if (error?.response?.data?.message) {
         toast({
-          title: "Signup Error",
+          title: "Login Error",
           description: error.response.data.message,
           status: "error",
           duration: 4000,
@@ -70,7 +68,7 @@ function Signup({ history }) {
     <Box maxW="md" mx="auto">
       <Box px="10" py="4" borderWidth="1px">
         <Text fontSize="xx-large" textAlign="center">
-          Register
+          Enquiry Form
         </Text>
 
         <Box my="8">
@@ -78,33 +76,18 @@ function Signup({ history }) {
             <VStack>
               <FormControl isInvalid={errors.name}>
                 <FormLabel htmlFor="name"></FormLabel>
-                <Input
-                  id="name"
-                  placeholder="Customer Name"
-                  {...register("name")}
-                />
-                <FormErrorMessage>{errors.name?.message}</FormErrorMessage>
+                <Input id="name" placeholder="Name" {...register("name")} />
+                <FormErrorMessage>
+                  {errors.name && errors.name.message}
+                </FormErrorMessage>
               </FormControl>
 
               <FormControl isInvalid={errors.phone}>
                 <FormLabel htmlFor="phone"></FormLabel>
-                <Input
-                  id="phone"
-                  placeholder="Phone Number"
-                  {...register("phone")}
-                />
-                <FormErrorMessage>{errors.phone?.message}</FormErrorMessage>
-              </FormControl>
-
-              <FormControl isInvalid={errors.password}>
-                <FormLabel htmlFor="password"></FormLabel>
-                <Input
-                  type="password"
-                  id="password"
-                  placeholder="Password"
-                  {...register("password")}
-                />
-                <FormErrorMessage>{errors.password?.message}</FormErrorMessage>
+                <Input id="phone" placeholder="Phone" {...register("phone")} />
+                <FormErrorMessage>
+                  {errors.phone && errors.phone.message}
+                </FormErrorMessage>
               </FormControl>
 
               <FormControl isInvalid={errors.address}>
@@ -114,17 +97,21 @@ function Signup({ history }) {
                   placeholder="Address"
                   {...register("address")}
                 />
-                <FormErrorMessage>{errors.address?.message}</FormErrorMessage>
+                <FormErrorMessage>
+                  {errors.address && errors.address.message}
+                </FormErrorMessage>
               </FormControl>
 
-              <FormControl isInvalid={errors.pincode}>
-                <FormLabel htmlFor="pincode"></FormLabel>
-                <Input
-                  id="pincode"
-                  placeholder="Pin Code"
-                  {...register("pincode")}
+              <FormControl isInvalid={errors.question}>
+                <FormLabel htmlFor="question"></FormLabel>
+                <Textarea
+                  id="question"
+                  placeholder="Question"
+                  {...register("question")}
                 />
-                <FormErrorMessage>{errors.pincode?.message}</FormErrorMessage>
+                <FormErrorMessage>
+                  {errors.question && errors.question.message}
+                </FormErrorMessage>
               </FormControl>
 
               <Button
@@ -133,30 +120,14 @@ function Signup({ history }) {
                 type="submit"
                 colorScheme="twitter"
               >
-                Sign up
+                Enquiry
               </Button>
             </VStack>
-
-            <Box my="4">
-              <Text fontSize="xs" color="gray.500">
-                By signing up, you agree to our Terms , Data Policy and Cookies
-                Policy.
-              </Text>
-            </Box>
           </form>
         </Box>
-      </Box>
-
-      <Box p="4" borderWidth="1px" my="4">
-        <HStack justifyContent="center">
-          <Text fontSize="sm">Have an Account ?</Text>
-          <Link to="/login">
-            <Text color="blue.500">Login</Text>
-          </Link>
-        </HStack>
       </Box>
     </Box>
   );
 }
 
-export default Signup;
+export default Enquiry;
